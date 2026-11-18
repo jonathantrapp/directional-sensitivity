@@ -1,0 +1,60 @@
+; Device-specific extension package. Generate with scripts/package-driver.ps1.
+; No class-wide registry filters, function-driver replacement or firmware access.
+[Version]
+Signature="$WINDOWS NT$"
+Class=Extension
+ClassGuid={e2f84ce7-8efa-411c-aa69-97454ca4cb57}
+ExtensionId={a58110af-c1cc-482c-a7d1-e57f018d9f86}
+Provider=%Provider%
+DriverVer=10/21/2026,0.2.0.0
+CatalogFile=DirectionalSensitivity.cat
+PnpLockdown=1
+
+[Manufacturer]
+%Provider%=Models,NTamd64.10.0...22621
+
+[Models.NTamd64.10.0...22621]
+%DeviceDesc%=MouseFilter,@HARDWARE_ID@
+
+[MouseFilter.NT]
+CopyFiles=DriverFiles
+
+[MouseFilter.NT.Filters]
+AddFilter=DirectionalSensitivity,,UpperFilter
+
+[UpperFilter]
+FilterPosition=Upper
+
+[MouseFilter.NT.Services]
+AddService=DirectionalSensitivity,,DriverService
+
+[DriverService]
+DisplayName=%ServiceDesc%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%13%\directional_filter.sys
+
+[MouseFilter.NT.Wdf]
+KmdfService=DirectionalSensitivity,DriverWdf
+
+[DriverWdf]
+KmdfLibraryVersion=1.33
+
+[DestinationDirs]
+DriverFiles=13
+
+[DriverFiles]
+directional_filter.sys
+
+[SourceDisksNames]
+1=%DiskDesc%,,,
+
+[SourceDisksFiles]
+directional_filter.sys=1
+
+[Strings]
+Provider="Directional Sensitivity Project"
+DeviceDesc="Directional sensitivity mouse filter"
+ServiceDesc="Directional sensitivity filter"
+DiskDesc="Directional sensitivity driver package"
